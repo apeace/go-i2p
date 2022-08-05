@@ -254,7 +254,6 @@ func TestRead(t *testing.T) {
 			wantSignature: aliceSignature,
 		},
 		{
-			// Skipping this for now, as the signature doesn't seem to match.
 			name:   "reseed-i2pgit.su3",
 			reader: fileReader(t, "testdata/reseed-i2pgit.su3"),
 			key:    fileRSAPubKey(t, "./testdata/reseed-hankhill19580_at_gmail.com.crt"),
@@ -271,7 +270,6 @@ func TestRead(t *testing.T) {
 			wantSignature: fileBytes(t, "testdata/reseed-i2pgit-signature"),
 		},
 		{
-			// Skipping this for now, as the signature doesn't seem to match.
 			name:   "snowflake-linux.su3",
 			reader: fileReader(t, "testdata/snowflake-linux.su3"),
 			key:    fileRSAPubKey(t, "./testdata/snowflake-hankhill19580_at_gmail.com.crt"),
@@ -288,7 +286,6 @@ func TestRead(t *testing.T) {
 			wantSignature: fileBytes(t, "testdata/snowflake-signature"),
 		},
 		{
-			// Skipping this for now, as the signature doesn't seem to match.
 			name:   "novg.su3",
 			reader: fileReader(t, "testdata/novg.su3"),
 			key:    fileRSAPubKey(t, "./testdata/igor_at_novg.net.crt"),
@@ -343,9 +340,6 @@ func TestRead(t *testing.T) {
 }
 
 func TestReadSignatureFirst(t *testing.T) {
-	// Skipping this for now, since the signature doesn't seem to match.
-	t.Skip()
-
 	assert := assert.New(t)
 
 	reader := fileReader(t, "testdata/reseed-i2pgit.su3")
@@ -358,7 +352,7 @@ func TestReadSignatureFirst(t *testing.T) {
 	assert.Equal(fileBytes(t, "testdata/reseed-i2pgit-signature"), sig)
 
 	// Reading content should give an error.
-	_, err = ioutil.ReadAll(su3.Content(nil))
+	_, err = ioutil.ReadAll(su3.Content(fileRSAPubKey(t, "./testdata/reseed-hankhill19580_at_gmail.com.crt")))
 	assert.NotNil(err)
 }
 

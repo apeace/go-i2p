@@ -549,7 +549,7 @@ func (r *signatureReader) getBytes() {
 	// If content hasn't been read yet, throw it away.
 	if !r.su3.contentReader.finished {
 		_, err := ioutil.ReadAll(r.su3.contentReader)
-		if err != nil {
+		if err != nil && !errors.Is(err, ErrInvalidSignature) {
 			r.err = fmt.Errorf("reading content: %w", err)
 			return
 		}
@@ -577,7 +577,9 @@ func (r *signatureReader) Read(p []byte) (n int, err error) {
 	r.su3.mut.Lock()
 	defer r.su3.mut.Unlock()
 	if len(r.bytes) == 0 {
+		r.su3.mut.Unlock()
 		r.getBytes()
+		r.su3.mut.Lock()
 	}
 	if r.err != nil {
 		return 0, r.err
